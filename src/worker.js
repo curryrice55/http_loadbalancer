@@ -7,6 +7,7 @@ process.on('message', (msg) => {
   if (msg.type === 'updateServerList') {
     // Update the server list
     serverList = msg.data;
+    console.log(`Worker ${process.pid} receiving Server List Update ${JSON.stringify(serverList)} `);
     serverIndex = 0; // Reset the server index when the server list is updated  
   }
 });

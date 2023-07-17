@@ -2,9 +2,12 @@
 //https://medium.com/before-semicolon/linked-list-in-javascript-circular-and-reversed-list-4376980f6568
 class CircularLinkedList {
     constructor() {
-        this.size = 0;      //The size(length) of CircularLinkedList
-        this.head = null;   //The start Node of the list. Node1(head) => Node2 => Node3(tail) => Node1(head) =>...
-        this.tail = null;   //The end Node of the list.
+        //The size(length) of CircularLinkedList
+        this.size = 0; 
+        //The start Node of the list. Node1(head) => Node2 => Node3(tail) => Node1(head) =>...     
+        this.head = null; 
+        //The end Node of the list. 
+        this.tail = null;   
         this.current = null;
     }
 
@@ -13,16 +16,20 @@ class CircularLinkedList {
     }
 
     createNode(item) {
-        return { item, next: null }   //Node consists of (Node1)|item|next| => (Node2)|item|next| =>...
+        //Node consists of (Node1)|item|next| => (Node2)|item|next| =>...
+        return { item, next: null }  
     }
 
     push(item) {
         const index = this.indexOf(item);
-        if (index !== -1) return -1;        //If the item alreay exsists at the list, skip this process.
+        //If the item alreay exsists at the list, skip this process.
+        if (index !== -1) return -1;       
 
         const node = this.createNode(item);
-        if (!this.head) this.head = node;   //If head node does not exist, we apply this node for head.
-        else this.tail.next = node;         //Otherwise, set the next of the tail node to this node.
+        //If head node does not exist, we apply this node for head.
+        if (!this.head) this.head = node;
+        //Otherwise, set the next of the tail node to this node.
+        else this.tail.next = node;         
 
         this.tail = node;
         this.tail.next = this.head;
@@ -131,19 +138,3 @@ class CircularLinkedList {
 }
 
 module.exports = CircularLinkedList;
-
-const list = new CircularLinkedList();
-// list.getSize();
-//list.push({ ip:'10.1.1.1', port:8080})
-//list.push({ ip:'10.1.1.2', port:8080})
-//list.push({ ip:'10.1.1.3', port:8080})
-//console.log(list.indexOf({ip:'10.1.1.1', port:8080}));
-//list.getSize();
-//list.getCurrentNode();
-//list.remove({ ip:'10.1.1.2', port:8080});
-//list.getSize();
-//console.log(list.getCurrentNode());
-// console.log(list.remove({ ip:'10.1.1.1', port:8080}));
-// list.getSize();
-// list.getCurrentNode();
-// list.push({ ip:'10.1.1.3', port:8080})
