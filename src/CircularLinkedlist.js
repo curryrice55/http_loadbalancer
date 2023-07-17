@@ -87,18 +87,26 @@ class CircularLinkedList {
                 this.tail = null;
                 this.current = null;
             } else {
-                this.head = target.next;      //Changes Head refernece to Next of the target.
-                this.tail.next = target.next; //The referrence of the Tail Node changes from Head to Next Head. 
+                //Changes Head refernece to Next of the target.
+                this.head = target.next; 
+                //The referrence of the Tail Node changes from Head to Next Head.     
+                this.tail.next = target.next;  
             }   
         //If Target delete node is 'Tail'
         } else if (index === this.size - 1) { 
-            const previous = this.getNodeAt(index - 1); //The previous Node of the target(Tail Node).
-            this.tail = previous; //Changes Tail refernece from target to Previous of the target.
-            previous.next = target.next; //The referrence of the Next of the previous Node changes from target to the next of the target. 
+            //The previous Node of the target(Tail Node).
+            const previous = this.getNodeAt(index - 1); 
+            //Changes Tail refernece from target to Previous of the target.
+            this.tail = previous; 
+             //The referrence of the Next of the previous Node changes from target to the next of the target. 
+            previous.next = target.next;
+            
         //If Target delete node is 'Middle'
         } else{
-            const previous = this.getNodeAt(index - 1);   //The previous Node of the target.
-            previous.next = target.next;                  //The referrence of the Next of the previous Node changes from target to the next of the target. 
+            //The previous Node of the target.
+            const previous = this.getNodeAt(index - 1);  
+            //The referrence of the Next of the previous Node changes from target to the next of the target.  
+            previous.next = target.next;                  
         }
         this.size--
         this.current = this.tail;
