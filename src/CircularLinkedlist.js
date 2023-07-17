@@ -105,21 +105,36 @@ class CircularLinkedList {
         return target; 
     }
 
+    toArray() {
+        let arr = [];
+        let current = this.head;
+        if (this.size === 0) {
+            return arr;
+        }
+        while (true) {
+            arr.push(current.item);
+            if (current === this.tail) {
+                break;
+            }
+            current = current.next;
+        }
+        return arr;
+    }
 }
 
 module.exports = CircularLinkedList;
 
-// const list = new CircularLinkedList();
+const list = new CircularLinkedList();
 // list.getSize();
-// // console.log(list.indexOf('server3'));
-// list.push({ ip:'10.1.1.1', port:8080})
-// list.push({ ip:'10.1.1.2', port:8080})
-// list.push({ ip:'10.1.1.3', port:8080})
-// list.getSize();
-// list.getCurrentNode();
-// console.log(list.remove({ ip:'10.1.1.2', port:8080}));
-// list.getSize();
-// list.getCurrentNode();
+//list.push({ ip:'10.1.1.1', port:8080})
+//list.push({ ip:'10.1.1.2', port:8080})
+//list.push({ ip:'10.1.1.3', port:8080})
+//console.log(list.indexOf({ip:'10.1.1.1', port:8080}));
+//list.getSize();
+//list.getCurrentNode();
+//list.remove({ ip:'10.1.1.2', port:8080});
+//list.getSize();
+//console.log(list.getCurrentNode());
 // console.log(list.remove({ ip:'10.1.1.1', port:8080}));
 // list.getSize();
 // list.getCurrentNode();

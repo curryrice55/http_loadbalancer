@@ -7,7 +7,7 @@ class HttpMonitor extends EventEmitter {
         this.targetHttpServer = targetHttpServer;
         this.httpOptions = {
             host: targetHttpServer.host,
-            prot: targetHttpServer.port,
+            port: targetHttpServer.port,
             path: targetHttpServer.monitor_path,
             method: 'GET'
         }
@@ -50,18 +50,21 @@ class HttpMonitor extends EventEmitter {
     }
 }
 
-const httpMonitorTest = new HttpMonitor({host:'10.1.1.1', port:8080, monitor_path:'/monitor'},{MONITOR_RETRY_COUNT:3,MONITOR_REQUEST_TIMEOUT:5000,MONITOR_RETRY_BACKOFF:1000});
-console.log(typeof(httpMonitorTest.monitorRequestTimeout))
-httpMonitorTest.monitor();
+module.exports = HttpMonitor
 
 
-httpMonitorTest.on('down', (targetHttpServer)=>{
-    console.log('OHHHH')
-    console.log(targetHttpServer)
-})
+//const httpMonitorTest = new HttpMonitor({host:'10.1.1.1', port:8080, monitor_path:'/monitor'},{MONITOR_RETRY_COUNT:3,MONITOR_REQUEST_TIMEOUT:5000,MONITOR_RETRY_BACKOFF:1000});
+//console.log(typeof(httpMonitorTest.monitorRequestTimeout))
+//httpMonitorTest.monitor();
 
-function monitor(){
-    console.log('hehehehe');
-}
+
+//httpMonitorTest.on('down', (targetHttpServer)=>{
+//    console.log('OHHHH')
+//    console.log(targetHttpServer)
+//})
+
+//function monitor(){
+//    console.log('hehehehe');
+//}
 
 
