@@ -120,11 +120,15 @@ class CircularLinkedList {
         }
         return arr;
     }
+
+    contains(item) {
+        return this.indexOf(item) !== -1;
+    }
 }
 
 module.exports = CircularLinkedList;
 
-const list = new CircularLinkedList();
+//const list = new CircularLinkedList();
 // list.getSize();
 //list.push({ ip:'10.1.1.1', port:8080})
 //list.push({ ip:'10.1.1.2', port:8080})

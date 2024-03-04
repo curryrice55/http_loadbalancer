@@ -1,5 +1,6 @@
 const CircularLinkedList = require('./CircularLinkedlist');
 const EventEmitter = require('events');
+const { RunningState, DownState } = require('./ServerState');
 
 class MonitoringServerList extends EventEmitter{
     constructor(){
@@ -16,23 +17,37 @@ class MonitoringServerList extends EventEmitter{
         return this;
     }
 
+    updateServerStatus(server, isRunning) {
+        let currentStateIsRunning = this.running.contains(server);
+        let currentStateIsDown = this.down.contains(server);
+    
+        // If there is no change in state, return without doing anything
+        if ((isRunning && currentStateIsRunning) || (!isRunning && currentStateIsDown)) {
+            return;
+        }
+        const state = isRunning ? new RunningState(this) : new DownState(this);
+        state.updateServer(server);
+    
+        // Here, we confirm that the server's state has changed
+        if ((isRunning && !currentStateIsRunning) || (!isRunning && !currentStateIsDown)) {
+            ++this.version; // Increment the version
+            this.emit('update', this.version, this.getRunningServerList()); // Emit an event after the state is updated
+        }
+    }    
+
     pushToRunningServerList(server){
-        ++this.version;
         this.running.push(server);
     }
 
     pushToDownServerList(server){
-        ++this.version;
         this.down.push(server);
     }
 
     removeFromRunningServerList(server){
-        ++this.version;
         this.running.remove(server);
     }
 
     removeFromDownServerList(server){
-        ++this.version;
         this.down.remove(server);
     }
 
@@ -43,20 +58,10 @@ class MonitoringServerList extends EventEmitter{
     getDownServerList() {
       return this.down.toArray();
     }
-    
+
+    getServerListVersion(){
+      return this.version;
+    }
 }
 
 module.exports = MonitoringServerList
-//const serverList = new MonitoringServerList();
-//const sample_list = [{ ip:'10.1.1.1',port:6089}, { ip:'10.1.1.2',port:6089}]
-//const initServerList = serverList.init(sample_list);
-//console.log(initServerList.running)
-//console.log(initServerList.down)
-//initServerList.removeFromRunningServerList({ ip:'10.1.1.2',port:6089})
-//initServerList.pushToDownServerListList({ ip:'10.1.1.2',port:6089})
-//console.log(initServerList.running.next().item.ip)
-//console.log(initServerList.down)
-
-//initServerList.pushToDownServerListList({ip:'10.1.1.2',port:6089})
-
-

@@ -21,7 +21,7 @@ class HttpMonitor extends EventEmitter {
         let retryCount = 0;
         const self = this;
         function httpRequest(){
-            const request = http.request(self.options);
+            const request = http.request(self.httpOptions);
             
             request.on('socket', (socket) =>{
                 //Setting timeout
@@ -36,8 +36,8 @@ class HttpMonitor extends EventEmitter {
             });
 
             request.on('error', (err) => {
-                console.error('Request error:', err);
-                if(retryCount++ > self.monitorRetryCount){
+                //console.error('Request error:', err);
+                if(retryCount++ >= self.monitorRetryCount){
                     self.emit('down', self.targetHttpServer);
                     return;
                 }
