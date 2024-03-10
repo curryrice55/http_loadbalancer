@@ -68,7 +68,10 @@ function worker() {
 
   // Periodically make HTTP requests to each server in the list
   setInterval(() => {
-    if (serverList.length === 0) return;
+    if (serverList.length === 0) {
+      console.debug(`Worker: ${process.pid} does not have serverlist ${JSON.stringify(serverList)}`) 
+      return;
+    }
     const currentServer = serverList.shift();
     serverList.push(currentServer); // Rotate the server list
     const options = createRequestOptions(currentServer);

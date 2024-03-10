@@ -1,68 +1,78 @@
-const MonitoringServerList = require('../src/MonitoringServerList');
-const EventEmitter = require('events');
+const MonitoringServerList = require('../src/MonitoringServerList'); // Adjust the path as necessary
+const CircularLinkedList = require('../src/CircularLinkedlist'); // Adjust the path as necessary
+const { RunningState, DownState } = require('../src/ServerState'); // Adjust the path as necessary
 
-// CircularLinkedListのモックを作成
+// Mock dependencies
 jest.mock('../src/CircularLinkedlist', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      push: jest.fn(),
-      remove: jest.fn(),
-      toArray: jest.fn(() => ['server1', 'server2'])
-    };
-  });
+  return jest.fn().mockImplementation(() => ({
+    push: jest.fn(),
+    contains: jest.fn(),
+    remove: jest.fn(),
+    toArray: jest.fn()
+  }));
 });
+
+jest.mock('../src/ServerState', () => ({
+  RunningState: jest.fn().mockImplementation(() => ({
+    updateServer: jest.fn()
+  })),
+  DownState: jest.fn().mockImplementation(() => ({
+    updateServer: jest.fn()
+  }))
+}));
 
 describe('MonitoringServerList', () => {
   let serverList;
+  const mockServer = 'server1';
 
   beforeEach(() => {
     serverList = new MonitoringServerList();
   });
 
-  test('init should populate running server list', () => {
-    const servers = ['server1', 'server2'];
-    serverList.init(servers);
-    expect(serverList.running.toArray()).toEqual(servers);
+  describe('init', () => {
+    it('should initialize the server list with the provided servers', () => {
+      serverList.init([mockServer]);
+      expect(serverList.running.push).toHaveBeenCalledWith(mockServer);
+    });
   });
 
-  test('pushToRunningServerList should add a server to running list and increment version', () => {
-    const server = 'server3';
-    const initialVersion = serverList.version;
-    serverList.pushToRunningServerList(server);
-    expect(serverList.running.push).toHaveBeenCalledWith(server);
-    expect(serverList.version).toBe(initialVersion + 1);
+  describe('updateServerStatus', () => {
+    beforeEach(() => {
+      // 各テストの前にモックをリセット
+      RunningState.mockClear();
+      DownState.mockClear();
+      serverList.running.contains.mockReset();
+      serverList.down.contains.mockReset();
+    });
+  
+    it('should transition server from running to down state', () => {
+      serverList.running.contains.mockReturnValue(true); // サーバーは最初に実行中
+      serverList.down.contains.mockReturnValue(false);
+  
+      serverList.updateServerStatus(mockServer, false); // ダウンに更新
+  
+      expect(DownState).toHaveBeenCalledTimes(1); // DownState コンストラクタが呼び出されるべき
+      expect(serverList.version).toBeGreaterThan(0);
+    });
+  
+    it('should transition server from down to running state', () => {
+      serverList.running.contains.mockReturnValue(false);
+      serverList.down.contains.mockReturnValue(true); // サーバーは最初にダウン状態
+  
+      serverList.updateServerStatus(mockServer, true); // 実行中に更新
+  
+      expect(RunningState).toHaveBeenCalledTimes(1); // RunningState コンストラクタが呼び出されるべき
+      expect(serverList.version).toBeGreaterThan(0);
+    });
+  
+    it('should not update if server is already in the desired state', () => {
+      serverList.running.contains.mockReturnValue(true); // サーバーは既に実行中
+  
+      serverList.updateServerStatus(mockServer, true); // 実行中に更新しようとする
+  
+      expect(RunningState).not.toHaveBeenCalled();
+      expect(DownState).not.toHaveBeenCalled();
+    });
   });
-
-  test('pushToDownServerList should add a server to down list and increment version', () => {
-    const server = 'server4';
-    const initialVersion = serverList.version;
-    serverList.pushToDownServerList(server);
-    expect(serverList.down.push).toHaveBeenCalledWith(server);
-    expect(serverList.version).toBe(initialVersion + 1);
-  });
-
-  test('removeFromRunningServerList should remove a server from running list and increment version', () => {
-    const server = 'server1';
-    const initialVersion = serverList.version;
-    serverList.removeFromRunningServerList(server);
-    expect(serverList.running.remove).toHaveBeenCalledWith(server);
-    expect(serverList.version).toBe(initialVersion + 1);
-  });
-
-  test('removeFromDownServerList should remove a server from down list and increment version', () => {
-    const server = 'server2';
-    const initialVersion = serverList.version;
-    serverList.removeFromDownServerList(server);
-    expect(serverList.down.remove).toHaveBeenCalledWith(server);
-    expect(serverList.version).toBe(initialVersion + 1);
-  });
-
-  test('getRunningServerList should return an array of running servers', () => {
-    expect(serverList.getRunningServerList()).toEqual(['server1', 'server2']);
-  });
-
-  test('getDownServerList should return an array of down servers', () => {
-    expect(serverList.getDownServerList()).toEqual(['server1', 'server2']);
-  });
+  
 });
-

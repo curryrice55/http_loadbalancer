@@ -51,20 +51,3 @@ class HttpMonitor extends EventEmitter {
 }
 
 module.exports = HttpMonitor
-
-
-//const httpMonitorTest = new HttpMonitor({host:'10.1.1.1', port:8080, monitor_path:'/monitor'},{MONITOR_RETRY_COUNT:3,MONITOR_REQUEST_TIMEOUT:5000,MONITOR_RETRY_BACKOFF:1000});
-//console.log(typeof(httpMonitorTest.monitorRequestTimeout))
-//httpMonitorTest.monitor();
-
-
-//httpMonitorTest.on('down', (targetHttpServer)=>{
-//    console.log('OHHHH')
-//    console.log(targetHttpServer)
-//})
-
-//function monitor(){
-//    console.log('hehehehe');
-//}
-
-

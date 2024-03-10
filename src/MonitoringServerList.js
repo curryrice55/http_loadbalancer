@@ -21,19 +21,15 @@ class MonitoringServerList extends EventEmitter{
         let currentStateIsRunning = this.running.contains(server);
         let currentStateIsDown = this.down.contains(server);
     
-        // If there is no change in state, return without doing anything
-        if ((isRunning && currentStateIsRunning) || (!isRunning && currentStateIsDown)) {
-            return;
-        }
-        const state = isRunning ? new RunningState(this) : new DownState(this);
-        state.updateServer(server);
-    
-        // Here, we confirm that the server's state has changed
+        // Check if there is a change in state, and update accordingly
         if ((isRunning && !currentStateIsRunning) || (!isRunning && !currentStateIsDown)) {
+            const state = isRunning ? new RunningState(this) : new DownState(this);
+            state.updateServer(server); 
+    
             ++this.version; // Increment the version
             this.emit('update', this.version, this.getRunningServerList()); // Emit an event after the state is updated
         }
-    }    
+    }
 
     pushToRunningServerList(server){
         this.running.push(server);

@@ -127,19 +127,3 @@ class CircularLinkedList {
 }
 
 module.exports = CircularLinkedList;
-
-//const list = new CircularLinkedList();
-// list.getSize();
-//list.push({ ip:'10.1.1.1', port:8080})
-//list.push({ ip:'10.1.1.2', port:8080})
-//list.push({ ip:'10.1.1.3', port:8080})
-//console.log(list.indexOf({ip:'10.1.1.1', port:8080}));
-//list.getSize();
-//list.getCurrentNode();
-//list.remove({ ip:'10.1.1.2', port:8080});
-//list.getSize();
-//console.log(list.getCurrentNode());
-// console.log(list.remove({ ip:'10.1.1.1', port:8080}));
-// list.getSize();
-// list.getCurrentNode();
-// list.push({ ip:'10.1.1.3', port:8080})
